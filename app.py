@@ -217,42 +217,33 @@ class GoogleSheetsDB:
         return self._create_post(self.ai_sheet, f"ai_{tg_id}", tg_id, name, link)
 
 
-# Глобальная переменная для БД (инициализируется при первом запросе)
+# Глобальная переменная для БД
 db = None
-db_lock = None
 
 
 def get_db():
     """
-    Ленивая инициализация БД с retry логикой.
-    ВАЖНО: инициализация происходит ТОЛЬКО при первом запросе,
-    а не при запуске gunicorn воркера.
+    Ленивая инициализация БД.
+    Происходит один раз при первом запросе к любому endpoint.
     """
-    global db, db_lock
-
-    # Thread-safe инициализация
-    if db_lock is None:
-        import threading
-        db_lock = threading.Lock()
+    global db
 
     if db is None:
-        with db_lock:
-            # Double-check после получения lock
-            if db is None:
-                max_retries = 3
-                for attempt in range(max_retries):
-                    try:
-                        print(f"[APP] Попытка подключения к БД ({attempt + 1}/{max_retries})...")
-                        db = GoogleSheetsDB()
-                        print("[APP] ✓ БД успешно инициализирована!")
-                        return db
-                    except Exception as e:
-                        print(f"[APP] Ошибка подключения: {e}")
-                        if attempt < max_retries - 1:
-                            time.sleep(2)
-                        else:
-                            print("[APP] ✗ Не удалось подключиться к БД после всех попыток")
-                            raise
+        try:
+            print("[APP] Начало инициализации БД...")
+            start_time = time.time()
+
+            db = GoogleSheetsDB()
+
+            elapsed = time.time() - start_time
+            print(f"[APP] ✓ БД инициализирована за {elapsed:.2f} сек")
+
+        except Exception as e:
+            print(f"[APP] ✗ КРИТИЧЕСКАЯ ОШИБКА инициализации БД: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
+
     return db
 
 
@@ -379,6 +370,20 @@ def profile():
 def health():
     """Проверка работоспособности приложения."""
     return {"status": "ok"}, 200
+
+
+# Warmup endpoint - инициализирует БД
+@app.route('/warmup')
+def warmup():
+    """
+    Прогрев приложения - инициализирует БД.
+    Railway может вызвать этот endpoint после деплоя.
+    """
+    try:
+        db = get_db()
+        return {"status": "ready", "db": "connected"}, 200
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500
 
 
 if __name__ == "__main__":
