@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 
+print("[APP] ✓ Flask приложение создано (БД будет инициализирована при первом запросе)")
+
 
 # =====================================================
 #   GOOGLE SHEETS: ОПТИМИЗИРОВАННАЯ РАБОТА С БД
@@ -215,27 +217,42 @@ class GoogleSheetsDB:
         return self._create_post(self.ai_sheet, f"ai_{tg_id}", tg_id, name, link)
 
 
-# Инициализация БД при старте приложения (не при первом запросе)
-print("[APP] Инициализация Flask приложения...")
+# Глобальная переменная для БД (инициализируется при первом запросе)
 db = None
+db_lock = None
 
 
 def get_db():
-    """Ленивая инициализация БД с retry логикой."""
-    global db
+    """
+    Ленивая инициализация БД с retry логикой.
+    ВАЖНО: инициализация происходит ТОЛЬКО при первом запросе,
+    а не при запуске gunicorn воркера.
+    """
+    global db, db_lock
+
+    # Thread-safe инициализация
+    if db_lock is None:
+        import threading
+        db_lock = threading.Lock()
+
     if db is None:
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                print(f"[APP] Попытка подключения к БД ({attempt + 1}/{max_retries})...")
-                db = GoogleSheetsDB()
-                return db
-            except Exception as e:
-                print(f"[APP] Ошибка подключения: {e}")
-                if attempt < max_retries - 1:
-                    time.sleep(2)
-                else:
-                    raise
+        with db_lock:
+            # Double-check после получения lock
+            if db is None:
+                max_retries = 3
+                for attempt in range(max_retries):
+                    try:
+                        print(f"[APP] Попытка подключения к БД ({attempt + 1}/{max_retries})...")
+                        db = GoogleSheetsDB()
+                        print("[APP] ✓ БД успешно инициализирована!")
+                        return db
+                    except Exception as e:
+                        print(f"[APP] Ошибка подключения: {e}")
+                        if attempt < max_retries - 1:
+                            time.sleep(2)
+                        else:
+                            print("[APP] ✗ Не удалось подключиться к БД после всех попыток")
+                            raise
     return db
 
 
