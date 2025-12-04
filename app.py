@@ -1,7 +1,9 @@
 import time
 from flask import Flask, render_template, request, redirect
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
+import json, os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
@@ -19,15 +21,24 @@ class GoogleSheetsDB:
         """
 
         # Права доступа
-        scope = [
-            'https://www.googleapis.com/auth/spreadsheets',
-            'https://www.googleapis.com/auth/drive'
-        ]
 
+
+
+
+        load_dotenv()
         # Авторизация сервисного аккаунта
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            'service_acc.json', scope
+        service_json = json.loads(os.environ["GOOGLE_SA_JSON"])
+
+        creds = Credentials.from_service_account_info(
+            service_json,
+            scopes=["https://www.googleapis.com/auth/spreadsheets"]
         )
+        scope = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"
+        ]
+        creds = Credentials.from_service_account_info(service_json, scopes=scope)
+        self.client = gspread.authorize(creds)
 
         # Подключаемся к Sheets
         self.client = gspread.authorize(creds)
