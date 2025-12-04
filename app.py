@@ -27,9 +27,10 @@ class GoogleSheetsDB:
         self.CACHE_TTL = 300  # 5 минут
         # --------------------------------
 
-        # Дальше всё как было
+        print("[DB] Загрузка переменных окружения...")
         load_dotenv()
 
+        print("[DB] Авторизация Google Sheets...")
         # Авторизация сервисного аккаунта
         service_json = json.loads(os.environ["GOOGLE_SA_JSON"])
 
@@ -41,14 +42,18 @@ class GoogleSheetsDB:
         creds = Credentials.from_service_account_info(service_json, scopes=scope)
         self.client = gspread.authorize(creds)
 
+        print("[DB] Подключение к таблице...")
         # Подключаем таблицу
         self.spreadsheet = self.client.open('NY NOTAILS 25')
 
+        print("[DB] Загрузка листов...")
         # Листы
         self.users_sheet = self.spreadsheet.worksheet('Users')
         self.bart_sheet = self.spreadsheet.worksheet('PostBart')
         self.cocktails_sheet = self.spreadsheet.worksheet('PostCocktails')
         self.ai_sheet = self.spreadsheet.worksheet('PostAi')
+
+        print("[DB] ✓ Инициализация завершена!")
 
     # =====================================================
     #   КЭШ ИНФРАСТРУКТУРА
@@ -210,14 +215,27 @@ class GoogleSheetsDB:
         return self._create_post(self.ai_sheet, f"ai_{tg_id}", tg_id, name, link)
 
 
-# Инициализация БД
+# Инициализация БД при старте приложения (не при первом запросе)
+print("[APP] Инициализация Flask приложения...")
 db = None
 
 
 def get_db():
+    """Ленивая инициализация БД с retry логикой."""
     global db
     if db is None:
-        db = GoogleSheetsDB()
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                print(f"[APP] Попытка подключения к БД ({attempt + 1}/{max_retries})...")
+                db = GoogleSheetsDB()
+                return db
+            except Exception as e:
+                print(f"[APP] Ошибка подключения: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(2)
+                else:
+                    raise
     return db
 
 
@@ -337,6 +355,13 @@ def profile():
         creative=data["creative"],
         active_page="profile"
     )
+
+
+# Health check endpoint для Railway
+@app.route('/health')
+def health():
+    """Проверка работоспособности приложения."""
+    return {"status": "ok"}, 200
 
 
 if __name__ == "__main__":
