@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 
+
 # =====================================================
 #   GOOGLE SHEETS: ОПТИМИЗИРОВАННАЯ РАБОТА С БД
 # =====================================================
@@ -15,47 +16,39 @@ class GoogleSheetsDB:
     def __init__(self):
         """
         Инициализация БД:
-        • Подключение к Google Sheets
-        • Загрузка листов
-        • Создание кэша (ускоряет работу)
+        • ЛОГИКА подключения к Google Sheets
+        • Создание листов
+        • Кэш
         """
 
-        # Права доступа
+        # --- создаём кэш САМОЕ ПЕРВОЕ ---
+        self.cache = {}
+        self.cache_time = {}
+        self.CACHE_TTL = 300  # 5 минут
+        # --------------------------------
 
-
-
-
+        # Дальше всё как было
         load_dotenv()
+
         # Авторизация сервисного аккаунта
         service_json = json.loads(os.environ["GOOGLE_SA_JSON"])
 
-        creds = Credentials.from_service_account_info(
-            service_json,
-            scopes=["https://www.googleapis.com/auth/spreadsheets"]
-        )
         scope = [
             "https://www.googleapis.com/auth/spreadsheets",
             "https://www.googleapis.com/auth/drive"
         ]
+
         creds = Credentials.from_service_account_info(service_json, scopes=scope)
         self.client = gspread.authorize(creds)
 
-        # Подключаемся к Sheets
-        self.client = gspread.authorize(creds)
-
-        # Открываем таблицу
+        # Подключаем таблицу
         self.spreadsheet = self.client.open('NY NOTAILS 25')
 
-        # Загружаем листы
+        # Листы
         self.users_sheet = self.spreadsheet.worksheet('Users')
         self.bart_sheet = self.spreadsheet.worksheet('PostBart')
         self.cocktails_sheet = self.spreadsheet.worksheet('PostCocktails')
         self.ai_sheet = self.spreadsheet.worksheet('PostAi')
-
-        # Кэш
-        self.cache = {}
-        self.cache_time = {}
-        self.CACHE_TTL = 300   # 5 минут
 
     # =====================================================
     #   КЭШ ИНФРАСТРУКТУРА
@@ -218,7 +211,14 @@ class GoogleSheetsDB:
 
 
 # Инициализация БД
-db = GoogleSheetsDB()
+db = None
+
+
+def get_db():
+    global db
+    if db is None:
+        db = GoogleSheetsDB()
+    return db
 
 
 # =====================================================
@@ -233,12 +233,12 @@ def home():
     """
     tg_id = request.args.get("tg_id")
 
-
-
-    if db.user_exists(tg_id):
-        return redirect(f"/materials?tg_id={tg_id}")
     if not tg_id:
         return render_template("coverpage.html")
+
+    db = get_db()
+    if db.user_exists(tg_id):
+        return redirect(f"/materials?tg_id={tg_id}")
 
     return render_template("coverpage.html")
 
@@ -249,7 +249,7 @@ def register():
     Обработка регистрации пользователя.
     Сохраняем всё в Google Sheets.
     """
-
+    db = get_db()
     tg_id = request.form.get("tg_id_reg", "").strip()
     firstname = request.form.get("firstname", "").strip()
     workplace = request.form.get("workplace", "").strip()
@@ -281,10 +281,8 @@ def sendwork():
         • cocktail
         • creative
     """
-
+    db = get_db()
     tg_id = request.args.get("tg_id")
-
-
 
     # Если POST → сохраняем работу
     if request.method == "POST":
@@ -319,7 +317,7 @@ def sendwork():
 @app.route('/profile')
 def profile():
     """Профиль пользователя."""
-
+    db = get_db()
     tg_id = request.args.get("tg_id")
 
     if not tg_id:
