@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Forum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Forum&family=Tenor+Sans&display=swap');
+
+body {
+    padding-bottom: 80px;
+    margin: 0;
+    font-family: 'Tenor Sans', sans-serif;
+}
+
+.header {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.98) 0%, rgba(26, 26, 26, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    z-index: 1000;
+}
+
+.header-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-image {
+    width: 120px;
+    height: auto;
+    margin-bottom: 5px;
+    transition: transform 0.3s ease;
+}
+
+/* ===== НАВИГАЦИЯ ===== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, rgba(26, 26, 26, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 20px;
+    box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #999;
+    transition: all 0.3s ease;
+    padding: 8px 20px;
+    border-radius: 12px;
+    position: relative;
+    flex: 1;
+    max-width: 120px;
+}
+
+
+/* ✅ АКТИВНЫЙ ЭЛЕМЕНТ - ИСПРАВЛЕНО */
+.nav-item.active {
+    color: #d4af37;
+    background: rgba(212, 175, 55, 0.15);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    transform: scale(1.05);
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #d4af37 0%, #f4e5a1 50%, #d4af37 100%);
+    border-radius: 0 0 3px 3px;
+}
+
+.nav-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+    transition: transform 0.3s ease;
+}
+
+
+.nav-item.active .nav-icon {
+    transform: scale(1.1);
+}
+
+.nav-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 480px) {
+    .bottom-nav {
+        padding: 10px 10px;
+    }
+
+    .nav-item {
+        padding: 6px 10px;
+    }
+
+    .nav-icon {
+        font-size: 22px;
+        margin-bottom: 2px;
+    }
+
+    .nav-label {
+        font-size: 10px;
+    }
+}
+
+/* Дополнительные стили */
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #FFD700;
+}
+
+.hero-dates {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #ccc;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 20px 0;
+}
+
+.nominations-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin: 20px auto;
+    max-width: 400px;
+}
+
+.nominations-list li {
+    margin: 15px 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.judges-info {
+    font-size: 1.1rem;
+    margin-top: 30px;
+    color: #FFD700;
+}

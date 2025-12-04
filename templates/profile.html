@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="profile-wrapper">
+    <div class="profile-container">
+        <!-- Аватар и основная информация -->
+        <div class="profile-header">
+            <img id="tg-avatar" class="profile-avatar" src="/static/img/NOTAILS.png" alt="Аватар пользователя">
+
+            <h1 class="profile-fullname">
+                <span id>{{ user.firstname or 'Имя' }}</span>
+            </h1>
+
+            <p class="profile-status">
+                Статус: <span class="status-badge">Участник</span>
+            </p>
+        </div>
+
+        <!-- Информация о пользователе -->
+        <div class="profile-info">
+
+            <div class="profile-row">
+                <div class="info-icon">🏢</div>
+                <div class="info-content">
+                    <span class="info-label">Место работы</span>
+                    <span class="info-value">{{ user.workplace if user else 'Не указано' }}</span>
+                </div>
+            </div>
+
+            <div class="profile-row" style="display:none">
+                <div class="info-icon">📱</div>
+                <div class="info-content">
+                    <span class="info-label">Instagram</span>
+                    <span
+                            class="info-value">
+                        {{ user.instagram if user.instagram else '@username' }}
+                    </span>
+                </div>
+            </div>
+            <div class="profile-row">
+                <div class="info-icon">🍸</div>
+                <div class="info-content">
+                    <span class="info-label">Bartender of the Year</span>
+                    <span class="info-value">{{ 'Отправлена' if bart and bart.name else 'Не отправлена' }}</span>
+                </div>
+            </div>
+
+            <!-- Категория: Cocktail of the Year -->
+            <div class="profile-row">
+                <div class="info-icon">🥂</div>
+                <div class="info-content">
+                    <span class="info-label">Cocktail of the Year</span>
+                    <span class="info-value">{{ 'Отправлена' if cock and cock.name  else 'Не отправлена' }}</span>
+                </div>
+            </div>
+
+            <!-- Категория: AI Creative of the Year -->
+            <div class="profile-row">
+                <div class="info-icon">🎨</div>
+                <div class="info-content">
+                    <span class="info-label">AI Creative of the Year</span>
+                    <span class="info-value">{{ 'Отправлена' if creative and creative.name else 'Не отправлена' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка редактирования (опционально) -->
+
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cover.css') }}">
+<!-- Эффект снега уже подключен в base.html -->
+{% endblock %}
+
+{% block body %}
+<div class="coverpage-wrapper">
+
+    <div class="coverpage-container">
+        <!-- Логотип -->
+        <div class="coverpage-logo">
+            <img src="{{ url_for('static', filename='img/cleaned.png') }}" alt="Notails Logo" class="logo-image">
+            <p class="logo-subtitle">NON ALCOHOLIC SPIRITS</p>
+        </div>
+
+        <!-- Главный заголовок -->
+        <h1 class="coverpage-title">
+            <span class="title-line1">NY</span>
+            <span class="title-line2">COMPETITION</span>
+            <span class="title-line3">2025</span>
+        </h1>
+
+        <!-- Даты -->
+        <p class="coverpage-dates">С 24 НОЯБРЯ ПО 21 ДЕКАБРЯ</p>
+
+        <!-- Описание -->
+        <p class="coverpage-description">
+            УЧАСТВУЙ В ЕЖЕГОДНОМ ЧЕМПИОНАТЕ<br>
+            И ВЫИГРЫВАЙ В ОДНОЙ ИЗ ТРЕХ НОМИНАЦИЙ!
+        </p>
+
+        <!-- Три номинации -->
+        <div class="nominations-section">
+            <h2 class="nominations-title">РАЗДЕЛЫ НОМИНАЦИЙ</h2>
+            <ul class="nominations-list">
+                <li>BARTENDER OF THE YEAR</li>
+                <li>COCKTAIL OF THE YEAR</li>
+                <li>AI CREATIVE OF THE YEAR</li>
+            </ul>
+        </div>
+
+        <!-- Судьи -->
+        <div class="judges-section">
+            <p class="judges-text">
+                <span class="judges-number">12 легендарных судей</span> определят победителей
+            </p>
+
+            <!-- Карусель судей -->
+            <div class="judges-carousel">
+                <div class="carousel-track" id="carouselTrack">
+
+                    <!-- Судья 1 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/AndreyKorobkov.jpg') }}" alt="Андрей Коробков"
+                             class="judge-image">
+                        <h3 class="judge-name">Андрей Коробков</h3>
+                        <p class="judge-title">
+                            • Спикер на Agave Experience, Singapore Cocktail Week.
+                            <p class="judge-title">• Лучший бартендер 2022 (Пальмовая Ветвь).</p>
+                            <p class="judge-title">• Top100 2024.</p>
+                        </p>
+                    </div>
+
+                    <!-- Судья 2 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/ArturGalaychuk.jpeg') }}" alt="Артур Галайчук"
+                             class="judge-image">
+                        <h3 class="judge-name">Артур Галайчук</h3>
+                        <p class="judge-title">
+                            - Основатель RELAB FAMILY: коктейльный бар RELAB, Paloma Cantina Kazan.<br>
+                            - Азиатский барный квартал ICHI by RELAB.
+                        </p>
+                    </div>
+
+                    <!-- Судья 3 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/DenisKryajev.JPG') }}" alt="Денис Кряжев"
+                             class="judge-image">
+                        <h3 class="judge-name">Денис Кряжев</h3>
+                        <p class="judge-title">
+                            Со-основатель DFF, генеральный директор Restaurant by Deep Fried Friends.<br>
+                            15+ лет в индустрии.<br>
+                            Ex-амбассадор Schweppes, судья Diageo World Class.
+                        </p>
+                    </div>
+
+                    <!-- Судья 4 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/DenisTemniy.jpg') }}" alt="Денис Темный"
+                             class="judge-image">
+                        <h3 class="judge-name">Денис Темный</h3>
+                        <p class="judge-title">
+                            Амбассадор премиального крепкого портфеля винного дома Фанагории, эксперт Bacardi.<br>
+                            Best Ambassador 2019.<br>
+                            Легенда барной индустрии 2021.
+                        </p>
+                    </div>
+
+                    <!-- Судья 5 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/DmitriySimanchuk.jpg') }}" alt="Дмитрий Симанчук"
+                             class="judge-image">
+                        <h3 class="judge-name">Дмитрий Симанчук</h3>
+                        <p class="judge-title">
+                            Операционный бар-менеджер ресторанов Fine Dining WRF.<br>
+                            Эксперт-наставник первой онлайн школы для барменов Solution.
+                        </p>
+                    </div>
+
+                    <!-- Судья 6 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/KostyaPlesovskih.jpg') }}"
+                             alt="Константин Плесовских" class="judge-image">
+                        <h3 class="judge-name">Константин Плесовских</h3>
+                        <p class="judge-title">
+                            Бренд-амбассадор Camus, совладелец Chainaya tea & cocktails.<br>
+                            20+ лет в барном деле, участник The World 50 Best Bars.
+                        </p>
+                    </div>
+
+                    <!-- Судья 7 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/ArtemPeruk.jpeg') }}" alt="Артем Перук"
+                             class="judge-image">
+                        <h3 class="judge-name">Артем Перук</h3>
+                        <p class="judge-title">
+                            Основатель El Copitas Bar.<br>
+                            #34 в списке самых влиятельных людей барной индустрии мира 2021.<br>
+                            BAR ICON 2023.
+                        </p>
+                    </div>
+
+                    <!-- Судья 8 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/MaksimYagolnik.jpg') }}" alt="Максим Ягольник"
+                             class="judge-image">
+                        <h3 class="judge-name">Максим Ягольник</h3>
+                        <p class="judge-title">
+                            Управляющий мексиканским коктейльным баром Fresca.<br>
+                            Вдохновитель сообщества "BartenderTMN", создатель "WelcomeDrinkBar".
+                        </p>
+                    </div>
+
+                    <!-- Судья 9 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/NikolayZincheko.jpg') }}" alt="Николай Зинченко"
+                             class="judge-image">
+                        <h3 class="judge-name">Николай Зинченко</h3>
+                        <p class="judge-title">
+                            Автор проекта "Long Tongue at the Bar" и книги "The Mocktail Book".<br>
+                            Создатель фестиваля Sip de Tour, барный продюсер.
+                        </p>
+                    </div>
+
+                    <!-- Судья 10 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/IvanPukilev.jpeg') }}" alt="Иван Пикулев"
+                             class="judge-image">
+                        <h3 class="judge-name">Иван Пикулев</h3>
+                        <p class="judge-title">
+                            Бар-менеджер Sangre Fresca.<br>
+                            Автор Telegram-канала "Кухня Пикуля".
+                        </p>
+                    </div>
+
+                    <!-- Судья 11 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/ValeriyPlihta.jpg') }}" alt="Валерий Плихта"
+                             class="judge-image">
+                        <h3 class="judge-name">Валерий Плихта</h3>
+                        <p class="judge-title">
+                            Консильери Make More Group (MORE, ZERO, Сказки о солнце).<br>
+                            Brand advocacy TSP distillery (Татспиртпром).
+                        </p>
+                    </div>
+
+                    <!-- Судья 12 -->
+                    <div class="judge-card">
+                        <img src="{{ url_for('static', filename='img/VitaliyEkimenko.jpeg') }}" alt="Виталий Екименко"
+                             class="judge-image">
+                        <h3 class="judge-name">Виталий Екименко</h3>
+                        <p class="judge-title">
+                            Дважды лучший бармен России.<br>
+                            Совладелец коктейльного бара Dry&Wet и первой коктейльной шотошной ДВОЙКА.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Индикаторы -->
+                <div class="carousel-indicators" id="carouselIndicators"></div>
+            </div>
+        </div>
+
+        <!-- Форма регистрации -->
+        <div class="registration-section">
+            <button class="btn-next">Участвовать</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/cover.js') }}"></script>
+<!-- Скрипт снега уже подключен в base.html -->
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sendwork.css') }}">
+{% endblock %}
+
+{% block title %}Отправить работу{% endblock %}
+
+{% block body %}
+<div class="sendwork-wrapper">
+  <div class="sendwork-container">
+    <h1 class="sendwork-title">Отправить работу</h1>
+    <p class="sendwork-subtitle">Загрузите свою работу для участия в конкурсе</p>
+
+    <!-- Индикатор шагов -->
+    <div class="step-indicator">
+      <div class="step-dot active" id="step1"></div>
+      <div class="step-dot" id="step2"></div>
+    </div>
+
+    <!-- Шаг 1: Выбор категории -->
+    <div class="category-selection" id="categorySelection">
+      {% if bart and cock and creative %}
+      <!-- Сообщение если все работы отправлены -->
+      <div class="all-submitted-message">
+        <div class="all-submitted-icon">🎉</div>
+        <h2 class="all-submitted-title">Все работы отправлены!</h2>
+        <p class="all-submitted-text">
+          Вы успешно отправили работы во всех трех категориях.<br>
+          Спасибо за участие в конкурсе!
+        </p>
+      </div>
+      {% else %}
+      <div class="category-grid">
+        <div class="category-card" data-category="bartender" data-submitted="{{ 'true' if bart else 'false' }}">
+          {% if bart %}
+          <div class="submitted-badge">✓ Отправлено</div>
+          {% endif %}
+          <div class="category-icon">🍸</div>
+          <h3 class="category-title">Bartender of the Year</h3>
+          <p class="category-description">Покажите своё мастерство и профессионализм в барменском искусстве</p>
+          {% if bart %}
+          <p class="category-submitted-text">Работа "{{ bart.name }}" уже отправлена</p>
+          {% endif %}
+        </div>
+
+        <div class="category-card" data-category="cocktail" data-submitted="{{ 'true' if cock else 'false' }}">
+          {% if cock %}
+          <div class="submitted-badge">✓ Отправлено</div>
+          {% endif %}
+          <div class="category-icon">🥂</div>
+          <h3 class="category-title">Cocktail of the Year</h3>
+          <p class="category-description">Представьте свой уникальный авторский коктейль</p>
+          {% if cock %}
+          <p class="category-submitted-text">Работа "{{ cock.name }}" уже отправлена</p>
+          {% endif %}
+        </div>
+
+        <div class="category-card" data-category="creative" data-submitted="{{ 'true' if creative else 'false' }}">
+          {% if creative %}
+          <div class="submitted-badge">✓ Отправлено</div>
+          {% endif %}
+          <div class="category-icon">🎨</div>
+          <h3 class="category-title">AI Creative of the Year</h3>
+          <p class="category-description">Создайте креативный контент с использованием AI технологий</p>
+          {% if creative %}
+          <p class="category-submitted-text">Работа "{{ creative.name }}" уже отправлена</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Шаг 2: Форма отправки -->
+    <form class="sendwork-form" id="sendworkForm" method="post">
+      <div class="selected-category">
+        <div class="selected-category-label">Выбранная категория</div>
+        <div class="selected-category-name" id="selectedCategoryName"></div>
+      </div>
+
+      <input type="hidden" id="category" name="category" value="">
+
+      <div class="form-group">
+        <label for="name">Название работы</label>
+        <input type="text" id="name" name="name" placeholder="Например: Новогодний коктейль 2025" required>
+      </div>
+
+      <div class="form-group">
+        <label for="link">Ссылка на работу</label>
+        <input type="text" id="link" name="link" placeholder="https://instagram.com/p/..." required>
+      </div>
+
+      <button class="btn-submit" type="submit">
+        Отправить работу
+      </button>
+
+      <button class="btn-back" type="button" id="btnBack">
+        Назад
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/sendwork.js') }}"></script>
+{% endblock %}
